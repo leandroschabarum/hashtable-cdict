@@ -3,3 +3,7 @@
 *.conf
 *.txt
 *.json
+*.i
+*.s
+*.o
+*.exe

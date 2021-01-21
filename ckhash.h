@@ -46,14 +46,13 @@ each different key string that is passed as argument. */
 		chunkIndex++;
 
 		printf("< %s : %u >\n", chunkTemp, chunkHash);
-		free(chunkTemp);
 	};
+	free(chunkTemp);
+	
 	printf("\nKey String: %s\nKey Length: %d\nKey Hash: %u\n\n", strkey, keyLen, keyHash);
 
 	return keyHash;
 }
-
-
 
 
 unsigned int OLDcharkey_hash(char key[KEY_MAX_SIZE])

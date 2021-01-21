@@ -12,9 +12,10 @@ int main() {
 
 	unsigned int newHash;
 	newHash = NEWcharkey_hash(userKey, strlen(userKey));
-	free(userKey);
+	//free(userKey);
 
-	userKey = "djfbajdfnajkfbfbdfgnsfgnsfgns";
+	printf("%s\n", "Enter second key value: ");
+	scanf("%s", userKey);
 	newHash = NEWcharkey_hash(userKey, strlen(userKey));
 	printf("Second New Hash: %u\n", newHash);
 

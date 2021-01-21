@@ -8,13 +8,12 @@ int main() {
 	printf("%s\n", "Enter key value: ");
 	unsigned char *userKey;
 	userKey = (unsigned char *)(malloc(KEY_MAX_SIZE));
-	//scanf("%s", userKey);
+	scanf("%s", userKey);
 
 	unsigned int newHash;
 	newHash = charkey_hash(userKey);
 	free(userKey);
 
-	printf("%s\n", "Started Second Computation");
 	newHash = charkey_hash("djfbajdfnajkfbfbdfgnsfgnsfgns");
 	printf("Second New Hash: %u\n", newHash);
 

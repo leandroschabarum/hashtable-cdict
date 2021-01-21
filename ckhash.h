@@ -10,7 +10,7 @@
 #define CHAR_CHUNK_SIZE 4
 
 
-unsigned int charkey_hash(unsigned char key[KEY_MAX_SIZE])
+unsigned int charkey_hash(char key[KEY_MAX_SIZE])
 /* charkey_hash returns a unique integer identifier for
 each different key string that is passed as argument. */
 {

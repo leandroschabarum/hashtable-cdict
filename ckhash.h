@@ -11,11 +11,12 @@
 
 
 unsigned int charkey_hash(char *strkey)
-/* charkey_hash returns a unique integer identifier for
-each different key string that is passed as argument. */
+/* charkey_hash() returns a unique integer identifier for
+each different key string that is passed as argument.
+Based on the polynomial rolling hash function */
 {
 	unsigned int chkID (unsigned char *chars, int index)
-	/* chkID returns an identifier for each group of size
+	/* chkID() returns an identifier for each group of size
 	CHAR_CHUNK_SIZE characters from the original key string */
 	{
 		int hashID = 0;
@@ -35,23 +36,34 @@ each different key string that is passed as argument. */
 
 	keyLength = (strlen(strkey) < KEY_MAX_SIZE) ? strlen(strkey) : KEY_MAX_SIZE;
 	strkey[keyLength] = '\0';
+	/* Ternary operator ensures keyLength to be less or equal to KEY_MAX_SIZE.
+	Because of that strkey will be cut down to that control length and ensure
+	that the keyHash won't overflow UINT_MAX (unsigned int limit) */
 
 	for(int i = 0; i < keyLength; i += CHAR_CHUNK_SIZE) {
+		sprintf(chunkTemp, "%*c", CHAR_CHUNK_SIZE, '\0');
+		/* sprintf() here makes sure garbage collection from
+		memory won't interfere with the chunkHash generated */
 
 		for(int j = 0; j < CHAR_CHUNK_SIZE; j++) {
-			chunkTemp[j] = strkey[i + j];
+			/* This inner loop goes over the skipped indexes from the
+			outside loop. It does so to fill the chunkTemp variable.
+			From a time complexity standpoint, combined both loops
+			still take together O(n) time to complete */
+
+			if(strkey[i + j] != '\0') {
+				chunkTemp[j] = strkey[i + j];
+			} else {
+				break;
+			};
 		};
-		chunkTemp[CHAR_CHUNK_SIZE] = '\0';
 
 		chunkHash = chkID(chunkTemp, chunkIndex);
 		keyHash = keyHash + (chunkHash * pow(SIGNATURE_ID, chunkIndex));
 		chunkIndex++;
-
-		//printf("< %s : %u >\n", chunkTemp, chunkHash);
 	};
 
-	free(chunkTemp);
 	printf("\nKey String: %s\nKey Length: %d\nKey Hash: %u\n\n", strkey, keyLength, keyHash);
-
+	free(chunkTemp);
 	return keyHash;
 }

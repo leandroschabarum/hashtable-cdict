@@ -9,15 +9,17 @@ int main() {
 	char *userKey;
 	userKey = (char *)(malloc(KEY_MAX_SIZE));
 
-	printf("%s\n", "Enter first key value: ");
-	scanf("%s", userKey);
-	newHash = charkey_hash(userKey);
+	while(1) {
+		printf("%s\n", "Enter key value: ");
+		scanf("%s", userKey);
 
-	printf("%s\n", "Enter second key value: ");
-	scanf("%s", userKey);
-	newHash = charkey_hash(userKey);
+		if (strcmp(userKey, "break") == 0) {
+			break;
+		} else {
+			newHash = charkey_hash(userKey);
+		};
+	};
 
 	free(userKey);
-
 	return 0;
 };

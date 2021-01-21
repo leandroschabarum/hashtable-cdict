@@ -10,7 +10,7 @@
 #define CHAR_CHUNK_SIZE 4
 
 
-unsigned int charkey_hash(char *strkey, int keyLength)
+unsigned int charkey_hash(char *strkey)
 /* charkey_hash returns a unique integer identifier for
 each different key string that is passed as argument. */
 {
@@ -27,16 +27,16 @@ each different key string that is passed as argument. */
 		return hashID * (index + 1);
 	};
 
-	unsigned int keyLen, keyHash, chunkIndex, chunkHash;
+	unsigned int keyLength, keyHash, chunkIndex, chunkHash;
 	unsigned char *chunkTemp;
 	chunkTemp = (unsigned char *)(malloc(CHAR_CHUNK_SIZE));
 	keyHash = 0;
 	chunkIndex = 0;
-	
-	keyLen = (keyLength < KEY_MAX_SIZE) ? keyLength : KEY_MAX_SIZE;
-	strkey[keyLen] = '\0';
 
-	for(int i = 0; i < keyLen; i += CHAR_CHUNK_SIZE) {
+	keyLength = (strlen(strkey) < KEY_MAX_SIZE) ? strlen(strkey) : KEY_MAX_SIZE;
+	strkey[keyLength] = '\0';
+
+	for(int i = 0; i < keyLength; i += CHAR_CHUNK_SIZE) {
 
 		for(int j = 0; j < CHAR_CHUNK_SIZE; j++) {
 			chunkTemp[j] = strkey[i + j];
@@ -47,11 +47,11 @@ each different key string that is passed as argument. */
 		keyHash = keyHash + (chunkHash * pow(SIGNATURE_ID, chunkIndex));
 		chunkIndex++;
 
-		printf("< %s : %u >\n", chunkTemp, chunkHash);
+		//printf("< %s : %u >\n", chunkTemp, chunkHash);
 	};
 
 	free(chunkTemp);
-	printf("\nKey String: %s\nKey Length: %d\nKey Hash: %u\n\n", strkey, keyLen, keyHash);
+	printf("\nKey String: %s\nKey Length: %d\nKey Hash: %u\n\n", strkey, keyLength, keyHash);
 
 	return keyHash;
 }

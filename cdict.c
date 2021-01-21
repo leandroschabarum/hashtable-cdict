@@ -11,11 +11,11 @@ int main() {
 
 	printf("%s\n", "Enter first key value: ");
 	scanf("%s", userKey);
-	newHash = charkey_hash(userKey, strlen(userKey));
+	newHash = charkey_hash(userKey);
 
 	printf("%s\n", "Enter second key value: ");
 	scanf("%s", userKey);
-	newHash = charkey_hash(userKey, strlen(userKey));
+	newHash = charkey_hash(userKey);
 
 	free(userKey);
 

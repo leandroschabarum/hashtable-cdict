@@ -3,15 +3,20 @@
 #include <stdlib.h>
 #include "ckhash.h"
 
-#define MAX_DICT_LENGTH 2147483648
 
 int main() {
 	printf("%s\n", "Enter key value: ");
-	unsigned char userKey[0];
-	scanf("%s", userKey);
+	unsigned char *userKey;
+	userKey = (unsigned char *)(malloc(KEY_MAX_SIZE));
+	//scanf("%s", userKey);
 
-	unsigned int newHash = charkey_hash(userKey);
-	printf("\nKey hash: %d\nMax dict size: %u\n", newHash, (unsigned int)(DICT_MAX_SIZE));
+	unsigned int newHash;
+	newHash = charkey_hash(userKey);
+	free(userKey);
+
+	printf("%s\n", "Started Second Computation");
+	newHash = charkey_hash("djfbajdfnajkfbfbdfgnsfgnsfgns");
+	printf("Second New Hash: %u\n", newHash);
 
 	return 0;
-}
+};

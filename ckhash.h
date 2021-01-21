@@ -9,11 +9,11 @@
 #define SIGNATURE_ID 2
 #define CHAR_CHUNK_SIZE 4
 
-unsigned int charkey_hash(unsigned char key[])
+
+unsigned int charkey_hash(unsigned char key[KEY_MAX_SIZE])
 /* charkey_hash returns a unique integer identifier for
 each different key string that is passed as argument. */
 {
-
 	unsigned int chkID (unsigned char *chars, int *index)
 	/* chkID returns an identifier for each group of size
 	CHAR_CHUNK_SIZE characters from the original key string */
@@ -31,6 +31,7 @@ each different key string that is passed as argument. */
 	unsigned char *chunkTemp;
 	chunkTemp = (unsigned char *)(malloc(CHAR_CHUNK_SIZE));
 	keyLength = strlen(key);
+	keyLength = (keyLength < KEY_MAX_SIZE) ? keyLength : KEY_MAX_SIZE;
 	keyHash = 0;
 	chunkIndex = 0;
 
@@ -48,7 +49,7 @@ each different key string that is passed as argument. */
 		printf("< %s : %u >\n", chunkTemp, chunkHash);
 		free(chunkTemp);
 	};
-	printf("\n< Key: %s \tLength: %d >\n", key, keyLength);
+	printf("\nKey String: %s\nKey Length: %d\nKey Hash: %u\n\n", key, keyLength, keyHash);
 
 	return keyHash;
 };

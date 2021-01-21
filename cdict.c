@@ -5,19 +5,19 @@
 
 
 int main() {
-	printf("%s\n", "Enter key value: ");
+	unsigned int newHash;
 	char *userKey;
 	userKey = (char *)(malloc(KEY_MAX_SIZE));
-	scanf("%s", userKey);
 
-	unsigned int newHash;
-	newHash = NEWcharkey_hash(userKey, strlen(userKey));
-	//free(userKey);
+	printf("%s\n", "Enter first key value: ");
+	scanf("%s", userKey);
+	newHash = charkey_hash(userKey, strlen(userKey));
 
 	printf("%s\n", "Enter second key value: ");
 	scanf("%s", userKey);
-	newHash = NEWcharkey_hash(userKey, strlen(userKey));
-	printf("Second New Hash: %u\n", newHash);
+	newHash = charkey_hash(userKey, strlen(userKey));
+
+	free(userKey);
 
 	return 0;
 };

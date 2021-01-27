@@ -1,3 +1,16 @@
+/*------------------ HEADERFILE ------------------*/
+/*CREATOR: Leandro Schabarum                      */
+/*DESCRIPTIOIN: Hashing function                  */
+/*------------------------------------------------*/
+
+#ifndef CKHASH_H  /* once only header guard (wrapper) */
+#define CKHASH_H
+
+#ifdef _cplusplus
+extern "C" {
+#endif
+/* start code */
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -66,4 +79,10 @@ Based on the polynomial rolling hash function */
 	printf("\nKey String: %s\nKey Length: %d\nKey Hash: %u\n\n", strkey, keyLength, keyHash);
 	free(chunkTemp);
 	return keyHash;
+};
+
+/* end code */
+#ifdef _cplusplus
 }
+#endif
+#endif /* once only header guard (wrapper) */

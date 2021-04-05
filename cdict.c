@@ -1,25 +1,29 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 #include "ckhash.h"
 
 
-int main() {
+int main(void)
+{
 	unsigned int newHash;
-	char *userKey;
-	userKey = (char *)(malloc(KEY_MAX_SIZE));
+	char userKey[KEY_MAX_SIZE];
+	char *ptr_userKey = 0;
 
 	while(1) {
-		printf("%s\n", "Enter key value: ");
-		scanf("%s", userKey);
+		printf("enter key value />_ ");
+		scanf("%s", &userKey);
+		ptr_userKey = &userKey[0];
 
-		if (strcmp(userKey, "break") == 0) {
+		if (strcmp(userKey, "break") == 0)
+		{
 			break;
-		} else {
-			newHash = charkey_hash(userKey);
-		};
-	};
+		}
+		else
+		{
+			newHash = charkey_hash(ptr_userKey);
+			printf("%s : %d\n", userKey, newHash);
+		}
+	}
 
-	free(userKey);
 	return 0;
-};
+}

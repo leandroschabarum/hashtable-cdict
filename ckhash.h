@@ -1,88 +1,70 @@
 /*------------------ HEADERFILE ------------------*/
 /*CREATOR: Leandro Schabarum                      */
-/*DESCRIPTIOIN: Hashing function                  */
+/*DESCRIPTION: Hashing function                   */
 /*------------------------------------------------*/
 
-#ifndef CKHASH_H  /* once only header guard (wrapper) */
+#ifndef CKHASH_H  // once only header guard (wrapper)
 #define CKHASH_H
 
 #ifdef _cplusplus
 extern "C" {
 #endif
-/* start code */
+// start code
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <limits.h>
+
 #include <math.h>
 
-#define DICT_MAX_SIZE UINT_MAX
 #define KEY_MAX_SIZE 64
 #define SIGNATURE_ID 2
 #define CHAR_CHUNK_SIZE 4
 
 
-unsigned int charkey_hash(char *strkey)
-/* charkey_hash() returns a unique integer identifier for
-each different key string that is passed as argument.
-Based on the polynomial rolling hash function */
+unsigned int charkey_hash(const char *strkey)
+/*
+ * Function for returning unique unsigned integer identifier for
+ * each different character string passed as argument.
+ * Based on the polynomial rolling hash function.
+ * strkey (required) ---> pointer to char | string to be hashed
+*/
 {
-	unsigned int chkID (unsigned char *chars, int index)
-	/* chkID() returns an identifier for each group of size
-	CHAR_CHUNK_SIZE characters from the original key string */
+	int breakFlag, oi, ii, gsum, lsum;
+	breakFlag = 0;
+	oi = 1;
+	gsum = 0; // string hash sum
+
+	while (breakFlag == 0)
 	{
-		int hashID = 0;
+		ii = 0;
+		lsum = 0; // string chunk hash sum
 
-		for(int i = 0; i < CHAR_CHUNK_SIZE; i++) {
-			hashID = hashID + (int)(chars[i])*pow(SIGNATURE_ID, i);
-		};
+		while (ii < CHAR_CHUNK_SIZE)
+		{
+			lsum += (unsigned char)(*strkey) * pow(SIGNATURE_ID, ii);
 
-		return hashID * (index + 1);
-	};
-
-	unsigned int keyLength, keyHash, chunkIndex, chunkHash;
-	unsigned char *chunkTemp;
-	chunkTemp = (unsigned char *)(malloc(CHAR_CHUNK_SIZE));
-	keyHash = 0;
-	chunkIndex = 0;
-
-	keyLength = (strlen(strkey) < KEY_MAX_SIZE) ? strlen(strkey) : KEY_MAX_SIZE;
-	strkey[keyLength] = '\0';
-	/* Ternary operator ensures keyLength to be less or equal to KEY_MAX_SIZE.
-	Because of that strkey will be cut down to that control length and ensure
-	that the keyHash won't overflow UINT_MAX (unsigned int limit) */
-
-	for(int i = 0; i < keyLength; i += CHAR_CHUNK_SIZE) {
-		sprintf(chunkTemp, "%*c", CHAR_CHUNK_SIZE, '\0');
-		/* sprintf() here makes sure garbage collection from
-		memory won't interfere with the chunkHash generated */
-
-		for(int j = 0; j < CHAR_CHUNK_SIZE; j++) {
-			/* This inner loop goes over the skipped indexes from the
-			outside loop. It does so to fill the chunkTemp variable.
-			From a time complexity standpoint, combined both loops
-			still take together O(n) time to complete */
-
-			if(strkey[i + j] != '\0') {
-				chunkTemp[j] = strkey[i + j];
-			} else {
+			if (*strkey == '\0')
+			{
+				/* reached end of the string*/
+				breakFlag = 1; // changes control variable for ending outside loop
 				break;
-			};
-		};
+			}
+			else
+			{
+				strkey++; // increments memory address to next position
+				ii++; // increments chunk loop counter
+			}
+		}
 
-		chunkHash = chkID(chunkTemp, chunkIndex);
-		keyHash = keyHash + (chunkHash * pow(SIGNATURE_ID, chunkIndex));
-		chunkIndex++;
-	};
+		gsum += lsum * oi;
+		oi++;
+	}
 
-	printf("\nKey String: %s\nKey Length: %d\nKey Hash: %u\n\n", strkey, keyLength, keyHash);
-	free(chunkTemp);
-	return keyHash;
-};
+	return gsum; // key hash for given string
+}
 
-/* end code */
+
+// end code
 #ifdef _cplusplus
 }
 #endif
-#endif /* once only header guard (wrapper) */
+#endif // once only header guard (wrapper)
+

@@ -2,14 +2,17 @@
 
 all: test
 
-test: charkeyHash.o cdict.o
-	gcc charkeyHash.o cdict.o -o test -l m
+binaries:
+	mkdir $(PWD)/$@
 
-charkeyHash.o: charkeyHash.c
-	gcc -c charkeyHash.c
+test: binaries binaries/charkeyHash.o binaries/cdict.o
+	gcc binaries/charkeyHash.o binaries/cdict.o -o test -l m
 
-cdict.o: cdict.c ckhash.h
-	gcc -c cdict.c
+binaries/charkeyHash.o: charkeyHash.c
+	gcc -c charkeyHash.c -o $@
+
+binaries/cdict.o: cdict.c ckhash.h
+	gcc -c cdict.c -o $@
 
 clean:
-	rm -f *.o test
+	rm -rf test $(PWD)/binaries

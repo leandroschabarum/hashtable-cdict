@@ -11,7 +11,7 @@ int main(void)
 
 	while(1) {
 		printf("enter key value />_ ");
-		scanf("%s", &userKey);
+		scanf("%s", &userKey[0]);
 		ptr_userKey = &userKey[0];
 
 		if (strcmp(userKey, "break") == 0)

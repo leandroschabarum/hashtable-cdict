@@ -4,10 +4,10 @@ COMP=gcc
 FLAG=-Wall
 EXEC=main
 
-SRC=src
-OBJ=obj
-BIN=bin
-DEP=.deps
+SRC:=src
+OBJ:=obj
+BIN:=bin
+DEP:=.deps
 
 SRCS=$(wildcard $(SRC)/*.c)
 OBJS=$(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SRCS))
@@ -25,7 +25,7 @@ build:
 
 $(BIN)/$(EXEC): $(OBJS)
 	@echo "compiling"
-	$(COMP) $(FLAG) $^ -o $@ -l m
+	$(COMP) $(FLAG) $(OBJS) -o $@ -l m
 
 $(OBJ)/%.o: $(SRC)/%.c
 	@echo "making object"

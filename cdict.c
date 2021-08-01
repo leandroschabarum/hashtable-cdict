@@ -19,7 +19,7 @@ int main(void)
 			break;
 		}
 
-		newHash = charKeyHash(ptr_userKey);
+		newHash = charKeyHash(ptr_userKey, MAX_DICT);
 		printf("%s : %d\n", userKey, newHash);
 	}
 

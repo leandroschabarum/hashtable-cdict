@@ -1,28 +1,26 @@
 #include <stdio.h>
 #include <string.h>
-#include "ckhash.h"
+#include "cdict.h"
 
 
 int main(void)
 {
 	unsigned int newHash;
-	char userKey[KEY_MAX_SIZE];
+	char userKey[128];
 	char *ptr_userKey = 0;
 
 	while(1) {
 		printf("enter key value />_ ");
-		scanf("%s", &userKey[0]);
+		scanf("%[^\n]%*c", &userKey[0]);
 		ptr_userKey = &userKey[0];
 
 		if (strcmp(userKey, "break") == 0)
 		{
 			break;
 		}
-		else
-		{
-			newHash = charkey_hash(ptr_userKey);
-			printf("%s : %d\n", userKey, newHash);
-		}
+
+		newHash = charKeyHash(ptr_userKey);
+		printf("%s : %d\n", userKey, newHash);
 	}
 
 	return 0;

@@ -7,17 +7,11 @@
 #define true 1
 #define false 0
 
-union content
-{
-	char c;
-	int i;
-	float f;
-};
 
 typedef struct Dictionary
 {
-	char key[128];
-	union content element;
+	char key[96];
+	void *content;
 } dict;
 
 
@@ -31,7 +25,6 @@ dict* newDict(unsigned int dict_size, ...)
 
 	va_list args;
 	va_start(args, dict_size);
-
 	int memSafe = va_arg(args, int);
 	va_end(args);
 	
@@ -55,10 +48,24 @@ dict* newDict(unsigned int dict_size, ...)
 	return localDict;
 }
 
-void addDict(dict *ptr_dict)
-{}
+void* addDict(dict *ptr_dict, const char *key, const void *value, size_t n)
+{
+	ptr_dict += charKeyHash(key, 10);
+	
+	ptr_dict->content = malloc(n);
 
-void remDict(dict *ptr_dict)
+	if (ptr_dict->content)
+	{
+		strcpy(&(ptr_dict->key[0]), key);
+		memcpy(ptr_dict->content, value, n);
+
+		return ptr_dict->content;
+	}
+
+	return 0;
+}
+
+void remDict(dict *ptr_dict, char *key)
 {}
 
 
@@ -70,11 +77,18 @@ int main(void)
 	//char *ptr_userKey = 0;
 
 	dict *d = newDict(10, true);
+	int test = 27;
+
+	void *p = addDict(d, "test", &test, sizeof(test));
+	printf(">>> %p\n", p);
 
 	for (int i = 0; i < 10; i++)
 	{
-		printf("[%d] %s : ", i, d[i].key);
-		printf("[%d] %d\n", i, d[i].element.i);
+		printf("[%d] %s : ", i, d->key);
+		int *p = (int *) d->content;
+		printf("[%d] %d\n", i, *p);
+		
+		d++;
 	}
 
 	/*

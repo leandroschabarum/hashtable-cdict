@@ -32,7 +32,7 @@ dict* newDict(unsigned int dict_size, ...)
 	localDict = (dict *) malloc(sizeof(dict) * dict_size);
 
 	// in case no memory was allocated returns null pointer
-	// if memSafe is true than raises an error
+	// if memSafe is true then raises an error
 	if (! localDict)
 	{
 		if (memSafe)
@@ -44,20 +44,18 @@ dict* newDict(unsigned int dict_size, ...)
 		return 0;
 	}
 
-	memset(localDict, 0, sizeof(*localDict));
-	return localDict;
+	//memset(localDict, 0, sizeof(*localDict));
+	return &localDict[0];
 }
 
-void* addDict(dict *ptr_dict, const char *key, const void *value, size_t n)
+void* addDict(dict *ptr_dict, const char *key, const void *value)
 {
 	ptr_dict += charKeyHash(key, 10);
-	
-	ptr_dict->content = malloc(n);
 
-	if (ptr_dict->content)
+	if (! ptr_dict->content)
 	{
-		strcpy(&(ptr_dict->key[0]), key);
-		memcpy(ptr_dict->content, value, n);
+		strcpy(ptr_dict->key, key);
+		ptr_dict->content = value;
 
 		return ptr_dict->content;
 	}
@@ -79,15 +77,12 @@ int main(void)
 	dict *d = newDict(10, true);
 	int test = 27;
 
-	void *p = addDict(d, "test", &test, sizeof(test));
-	printf(">>> %p\n", p);
+	addDict(d, "test\0", ((void *) &test));
 
 	for (int i = 0; i < 10; i++)
 	{
-		printf("[%d] %s : ", i, d->key);
-		int *p = (int *) d->content;
-		printf("[%d] %d\n", i, *p);
-		
+		printf("[%d] %s : %p\n", i, d->key, d->content);
+		printf("\t>>> %d\n", (d->content) ? *((int *) d->content) : 0);
 		d++;
 	}
 

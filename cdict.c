@@ -69,7 +69,7 @@ void addDict(dict *ptr_dict, const char *key, void *value)
 		
 		if (! ptr_dict->key)
 		{
-			fprintf(stderr, "[unsuficient memory] unable to allocate <%d bytes> for <%s>\n", key_size, local_key_copy);
+			fprintf(stderr, "[unsufficient memory] unable to allocate <%d bytes> for <%s>\n", key_size, local_key_copy);
 			exit(EXIT_FAILURE);
 		}
 		// using strcpy() because local_key_copy

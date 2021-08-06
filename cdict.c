@@ -4,13 +4,12 @@
 #include <string.h>
 #include "hashFunc.h"
 
-#define true 1
-#define false 0
+#define KEY_MAX_SIZE 64
 
 
 typedef struct Dictionary
 {
-	char key[96];
+	void *key;
 	void *content;
 } dict;
 
@@ -44,27 +43,67 @@ dict* newDict(unsigned int dict_size, ...)
 		return 0;
 	}
 
-	//memset(localDict, 0, sizeof(*localDict));
 	return &localDict[0];
 }
 
-void* addDict(dict *ptr_dict, const char *key, const void *value)
+void addDict(dict *ptr_dict, const char *key, void *value)
 {
-	ptr_dict += charKeyHash(key, 10);
+	int key_size = 0;
+	char local_key_copy[KEY_MAX_SIZE];
 
-	if (! ptr_dict->content)
+	while (*key != '\0' && key_size < (KEY_MAX_SIZE - 1))
 	{
-		strcpy(ptr_dict->key, key);
-		ptr_dict->content = value;
-
-		return ptr_dict->content;
+		local_key_copy[key_size] = *key;
+		key_size++;
+		key++;
 	}
-
-	return 0;
+	// enforces key to always be null terminated
+	local_key_copy[key_size] = '\0';
+	
+	if (key_size > 0)
+	{
+		// increments dictionary pointer
+		// to key hashed index in array
+		ptr_dict += charKeyHash(local_key_copy, 10);
+		ptr_dict->key = (char *) malloc(key_size + 1);
+		
+		if (! ptr_dict->key)
+		{
+			fprintf(stderr, "[unsuficient memory] unable to allocate <%d bytes> for <%s>\n", key_size, local_key_copy);
+			exit(EXIT_FAILURE);
+		}
+		// using strcpy() because local_key_copy
+		// is always null terminated and within
+		// expected maximum size for dictionary key
+		strcpy(ptr_dict->key, local_key_copy);
+		ptr_dict->content = value;
+	}
 }
 
 void remDict(dict *ptr_dict, char *key)
-{}
+{
+	int key_size = 0;
+	char local_key_copy[KEY_MAX_SIZE];
+
+	while (*key != '\0' && key_size < (KEY_MAX_SIZE - 1))
+	{
+		local_key_copy[key_size] = *key;
+		key_size++;
+		key++;
+	}
+	// enforces key to always be null terminated
+	local_key_copy[key_size] = '\0';
+	
+	if (key_size > 0)
+	{
+		// increments dictionary pointer
+		// to key hashed index in array
+		ptr_dict += charKeyHash(local_key_copy, 10);
+		ptr_dict->key = 0;
+		free(ptr_dict->key);
+		free(ptr_dict->content);
+	}
+}
 
 
 
@@ -74,14 +113,16 @@ int main(void)
 	//char userKey[128];
 	//char *ptr_userKey = 0;
 
-	dict *d = newDict(10, true);
+	dict *d = newDict(10, 1);
+	printf(">>> dict : %lu bytes\n", 10*sizeof(*d));
 	int test = 27;
 
-	addDict(d, "test\0", ((void *) &test));
+	addDict(d, "0123456789abcdef", &test);
+	// remDict(d, "0123456789abcdef");
 
 	for (int i = 0; i < 10; i++)
 	{
-		printf("[%d] %s : %p\n", i, d->key, d->content);
+		printf("[%d] %s : %p\n", i, (char *) d->key, d->content);
 		printf("\t>>> %d\n", (d->content) ? *((int *) d->content) : 0);
 		d++;
 	}

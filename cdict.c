@@ -26,6 +26,12 @@ typedef struct Dictionary
 } dict;
 
 
+/**
+ * Function for creating new dictionary structure.
+ *
+ * @param unsigned int dict_size
+ * @return dict*
+ */
 dict* newDict(unsigned int dict_size, ...)
 {
 	if (dict_size < 1)
@@ -67,6 +73,16 @@ dict* newDict(unsigned int dict_size, ...)
 	return 0;
 }
 
+
+/**
+ * Function for setting given key to specified value.
+ *
+ * @param dict *ptr_dict
+ * @param const char *key
+ * @param const void *data
+ * @param unsigned int data_size
+ * @return void
+ */
 void setKey(dict *ptr_dict, const char *key, const void *data, unsigned int data_size)
 {
 	unsigned int key_size = 0;
@@ -126,6 +142,14 @@ void setKey(dict *ptr_dict, const char *key, const void *data, unsigned int data
 	}
 }
 
+
+/**
+ * Function to delete given key from dictionary.
+ *
+ * @param dict *ptr_dict
+ * @param char *key
+ * @return void
+ */
 void delKey(dict *ptr_dict, char *key)
 {
 	int key_size = 0;
@@ -161,6 +185,41 @@ void delKey(dict *ptr_dict, char *key)
 		ptr_entry->data = 0;
 	}
 }
+
+
+/**
+ * Function to retrieve memory address of value stored at given key.
+ *
+ * @param dict *ptr_dict
+ * @param const char *key
+ * @return void*
+ */
+void* getKey(dict *ptr_dict, const char *key)
+{
+	int key_size = 0;
+	char local_key_copy[KEY_MAX_SIZE];
+
+	while (*key != '\0' && key_size < (KEY_MAX_SIZE - 1))
+	{
+		local_key_copy[key_size] = *key;
+		key_size++;
+		key++;
+	}
+	// enforces key to always be null terminated
+	local_key_copy[key_size] = '\0';
+
+	entry *ptr_entry = &ptr_dict->entries[0];
+
+	if (key_size > 0)
+	{
+		ptr_entry += charKeyHash(local_key_copy, ptr_dict->length);
+
+		return ptr_entry->data->value;
+	}
+
+	return 0;
+}
+
 
 void showDict(dict *ptr_dict)
 {
@@ -210,6 +269,10 @@ int main(void)
 	setKey(d, "def", &test, sizeof(test));
 	delKey(d, "test");
 	showDict(d);
+
+
+	int *v = getKey(d, "abc");
+	printf("### %d\n", *v);
 
 	/*
 	while(1) {

@@ -19,19 +19,19 @@ TREE=-MT $@ -MMD -MP -MF $(@:$(OBJ)/%.o=$(DEP)/%.d)
 all: $(BIN)/$(EXEC)
 
 build:
-	@echo "creating directories"
+	@echo "creating directories..."
 	mkdir $(SRC) $(OBJ) $(BIN) $(DEP)
 	mv *.c *.h $(SRC)/
 
 $(BIN)/$(EXEC): $(OBJS)
-	@echo "compiling"
+	@echo "compiling $@"
 	$(COMP) $(FLAG) $(OBJS) -o $@ -l m
 
 $(OBJ)/%.o: $(SRC)/%.c
-	@echo "making object"
+	@echo "making object $@"
 	$(COMP) $(FLAG) -c $< -o $@ $(TREE)
 
 clean:
-	@echo "cleaning up"
+	@echo "cleaning up..."
 	mv $(SRC)/* $(PWD)/
 	rm -rf $(OBJ) $(BIN) $(DEP) $(SRC)

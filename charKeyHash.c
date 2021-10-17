@@ -1,9 +1,11 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
-#include <string.h>
 
-#define SIGNATURE_ID 2
+#define SIGNATURE_ID 3 // prime
 #define CHAR_CHUNK_SIZE 4
-#define MAX_HASH sizeof(unsigned int)
+
+#define MAX_HASH ((1L << (sizeof(unsigned int) * 8)) - 1)
 
 
 /**
@@ -11,10 +13,23 @@
  * Based on the polynomial rolling hash function.
  *
  * @param char *key
+ * @param unsigned int dict_size
  * @return unsigned int
 */
-unsigned int charKeyHash(const char *key)
+unsigned int charKeyHash(const char *key, unsigned int dict_max_size)
 {
+	if (dict_max_size < 1)
+	{
+		fprintf(stderr, "[%u] bad dictionary size\n", dict_max_size);
+		exit(EXIT_FAILURE);
+	}
+
+	if (*key == '\0')
+	{
+		fprintf(stderr, "[%s] bad dictionary key\n", key);
+		exit(EXIT_FAILURE);
+	}
+
 	unsigned int hashSum, chunkSum, ps;
 	int breakFlag, oi, ii;
 	
@@ -31,7 +46,7 @@ unsigned int charKeyHash(const char *key)
 			// calculated accordingly to ---> ascii*(sig)^n
 			ps = (unsigned char)(*key) * pow(SIGNATURE_ID, ii);
 
-			if ((ps > 0 && hashSum > MAX_HASH - (chunkSum + ps) * oi) || *key == '\0')
+			if ((ps > 0 && hashSum > MAX_HASH - ((chunkSum + ps) * oi)) || *key == '\0')
 			{
 				// reached maximum key hash
 				// or end of the string
@@ -54,5 +69,5 @@ unsigned int charKeyHash(const char *key)
 	while (breakFlag);
 
 	// key hash for given string
-	return hashSum;
+	return hashSum % dict_max_size;
 }

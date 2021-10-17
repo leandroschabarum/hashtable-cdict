@@ -25,7 +25,7 @@ gcc -c charKeyHash.c -o charKeyHash.o
 # link objects and compile executable program
 gcc cdict.o charKeyHash.o -o main -l m
 
-#runs compiled program
+# runs compiled program
 ./main
 ```
 

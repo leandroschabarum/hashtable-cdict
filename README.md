@@ -1,8 +1,8 @@
-#### Hash table data structure
-### cdict
+# Hash table data structure
+## **cdict**
 ----
 
-## Compiling with make
+### Compiling with make
 
 ```shell
 # builds directory structure and compiles program
@@ -16,7 +16,7 @@ make clean
 ```
 
 
-## Compiling directly with GCC
+### Compiling directly with GCC
 
 ```shell
 # assemble cdict.o and charKeyHash.o objects

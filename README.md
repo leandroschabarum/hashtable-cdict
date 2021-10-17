@@ -1,5 +1,4 @@
-# Hash table data structure
-## **cdict**
+# Hash table data structure - **cdict**
 ----
 
 ### Compiling with make
